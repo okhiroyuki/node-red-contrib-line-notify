@@ -1,14 +1,18 @@
-'use strcit';
-
 module.exports = function(RED) {
-    const line = require('axios');
+    'use strcit';
+
+    const axios = require('axios');
     const qs = require('querystring');
     const BASE_URL = 'https://notify-api.line.me';
     const PATH =  '/api/notify';
 
-    function LineNotifyNode(config) {
-        RED.nodes.createNode(this,config);
+    function LineNotifyNode(n) {
+        RED.nodes.createNode(this, n);
         var node = this;
+        node.message = n.message;
+        node.accessToken = n.accessToken;
+        node.stickerPackageId = n.stickerPackageId;
+        node.stickerId = n.stickerId;
 
         node.on('input', function(msg) {
             if(msg.message !== undefined && typeof msg.message === 'string'){
@@ -21,14 +25,16 @@ module.exports = function(RED) {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Bearer ' + node.credentials.token;
+                    'Authorization': 'Bearer ' + node.accessToken
                 },
                 data: qs.stringify({
                     message: node.message,
+                    stickerPackageId: node.stickerPackageId,
+                    stickerId: node.stickerId
                 })
             };
 
-            axios.request(config)
+            axios.request(lineconfig)
             .then((res) => {
                 console.log(res);
                 node.status({

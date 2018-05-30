@@ -1,4 +1,4 @@
-<script type="text/x-red" data-template-name="linebot-reply">
+<script type="text/x-red" data-template-name="line-notify">
     <div class="form-row">
         <label for="node-input-name"> <i class="fa fa-tag fa-fw"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -8,10 +8,17 @@
         <input type="text" id="node-input-accessToken" placeholder="AccessToken">
     </div>
     <div class="form-row">
-        <label for="node-input-replyMessage"> <i class="fa fa-info fa-fw"></i> Message</label>
+        <label for="node-input-message"> <i class="fa fa-info fa-fw"></i> Message</label>
         <input type="text" id="node-input-message" placeholder="message">
     </div>
-
+    <div class="form-row">
+        <label for="node-input-stickerPackageId"> <i class="fa fa-info fa-fw"></i> StickerPackageId</label>
+        <input type="text" id="node-input-stickerPackageId">
+    </div>
+    <div class="form-row">
+        <label for="node-input-stickerId"> <i class="fa fa-info fa-fw"></i> stickerId</label>
+        <input type="text" id="node-input-stickerId">
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="line-notify">
@@ -31,7 +38,7 @@
             imegetype:{
                 value: "thumbnail"
             },
-            imageurl:{
+            imageUrl:{
                 value:""
             },
             stickerPackageId: {
@@ -39,12 +46,9 @@
             },
             stickerId: {
                 value: "1"
-            }
-        },
-        credentials: {
-            accesstoken: {
-                value: "",
-                required: true
+            },
+            accessToken:{
+                value: ""
             }
         },
         inputs: 1,

@@ -1,5 +1,5 @@
 {
-  "name": "red-contrib-line-notify",
+  "name": "node-red-contrib-line-notify",
   "version": "1.0.0",
   "description": "line notify node",
   "main": "node.js",
