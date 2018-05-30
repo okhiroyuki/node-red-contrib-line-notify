@@ -10,7 +10,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, n);
         var node = this;
         node.message = n.message;
-        node.accessToken = n.accessToken;
+        node.accessToken = this.credentials.accessToken;
         node.stickerPackageId = n.stickerPackageId;
         node.stickerId = n.stickerId;
 
@@ -53,5 +53,10 @@ module.exports = function(RED) {
             });
         });
     }
-    RED.nodes.registerType("line-notify",LineNotifyNode);
+
+    RED.nodes.registerType("line-notify", LineNotifyNode, {
+        credentials: {
+            accessToken: {type:"text"}
+        }
+    });
 }
