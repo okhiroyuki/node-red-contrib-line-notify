@@ -1,0 +1,32 @@
+{
+  "name": "red-contrib-line-notify",
+  "version": "1.0.0",
+  "description": "line notify node",
+  "main": "node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okhiroyuki/node-red-contrib-line-notify.git"
+  },
+  "keywords": [
+    "node-red",
+    "line"
+  ],
+  "author": "okhiroyuki",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/okhiroyuki/node-red-contrib-line-notify/issues"
+  },
+  "homepage": "https://github.com/okhiroyuki/node-red-contrib-line-notify#readme",
+  "node-red": {
+    "nodes": {
+      "line-notify": "./nodes/line-notify.js"
+    }
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "querystring": "^0.2.0"
+  }
+}

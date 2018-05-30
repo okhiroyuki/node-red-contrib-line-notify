@@ -1,0 +1,57 @@
+<script type="text/x-red" data-template-name="linebot-reply">
+    <div class="form-row">
+        <label for="node-input-name"> <i class="fa fa-tag fa-fw"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-accessToken"> <i class="fa fa-key fa-fw"></i> AccessToken</label>
+        <input type="text" id="node-input-accessToken" placeholder="AccessToken">
+    </div>
+    <div class="form-row">
+        <label for="node-input-replyMessage"> <i class="fa fa-info fa-fw"></i> Message</label>
+        <input type="text" id="node-input-message" placeholder="message">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="line-notify">
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('line-notify', {
+        category: 'Line',
+        color: '#5ae628',
+        defaults: {
+            name: {
+                value: ""
+            },
+            message: {
+                value: "Hello!"
+            },
+            imegetype:{
+                value: "thumbnail"
+            },
+            imageurl:{
+                value:""
+            },
+            stickerPackageId: {
+                value: "1"
+            },
+            stickerId: {
+                value: "1"
+            }
+        },
+        credentials: {
+            accesstoken: {
+                value: "",
+                required: true
+            }
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "light.png",
+        label: function () {
+            return this.name || "linebot-reply";
+        }
+    });
+</script>
