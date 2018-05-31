@@ -1,0 +1,20 @@
+{
+    "line-notify": {
+        "label": {
+            "name": "Name",
+            "accessToken": "AccessToken",
+            "message": "Message",
+            "type": "ContentType",
+            "url": "URL",
+            "tickerPackageId": "PackageId",
+            "tickerId": "Id"
+        },
+        "type":{
+            "message": "Message",
+            "imageUrl": "ImageURL",
+            "sticker": "Sticker"
+        },
+        "errors": {
+        }
+    }
+}

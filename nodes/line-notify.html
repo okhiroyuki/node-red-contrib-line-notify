@@ -1,25 +1,46 @@
 <script type="text/x-red" data-template-name="line-notify">
     <div class="form-row">
-        <label for="node-input-name"> <i class="fa fa-tag fa-fw"></i> Name</label>
+        <label for="node-input-name"> <i class="fa fa-tag fa-fw"></i> <span data-i18n="line-notify.label.name"></span></label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-accessToken"> <i class="fa fa-key fa-fw"></i> AccessToken</label>
+        <label for="node-input-accessToken"> <i class="fa fa-key fa-fw"></i> <span data-i18n="line-notify.label.accessToken"></span></label>
         <input type="text" id="node-input-accessToken" placeholder="AccessToken">
     </div>
     <div class="form-row">
-        <label for="node-input-message"> <i class="fa fa-info fa-fw"></i> Message</label>
+        <label for="node-input-contentType"><i class="fa fa-list fa-fw"></i> <span data-i18n="line-notify.label.type"></span></label>
+        <select type="text" id="select-contentType">
+            <option value="message" data-i18n="line-notify.type.message"></option>
+            <option value="imageUrl" data-i18n="line-notify.type.imageUrl"></option>
+            <option value="sticker" data-i18n="line-notify.type.sticker"></option>
+        </select>
+        <input type="hidden" id="node-input-contentType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-message"> <i class="fa fa-volume-up fa-fw"></i> <span data-i18n="line-notify.label.message"></label>
         <input type="text" id="node-input-message" placeholder="message">
     </div>
-    <div class="form-row">
-        <label for="node-input-stickerPackageId"> <i class="fa fa-info fa-fw"></i> StickerPackageId</label>
+    <div class="form-row line-type-imageUrl" hidden>
+        <label for="node-input-url"> <i class="fa fa-globe fa-fw"></i> <span data-i18n="line-notify.label.url"></label>
+        <input type="text" id="node-input-imageUrl">
+    </div>
+    <div class="form-row line-type-sticker" hidden>
+        <label for="node-input-stickerPackageId"> <i class="fa fa-info fa-fw"></i> <span data-i18n="line-notify.label.stickerPackageId"></label>
         <input type="text" id="node-input-stickerPackageId">
     </div>
-    <div class="form-row">
-        <label for="node-input-stickerId"> <i class="fa fa-info fa-fw"></i> stickerId</label>
+    <div class="form-row line-type-sticker" hidden>
+        <label for="node-input-stickerId"> <i class="fa fa-info fa-fw"></i> <span data-i18n="line-notify.label.stickerId"></label>
         <input type="text" id="node-input-stickerId">
     </div>
 </script>
+
+<style>
+    input#node-input-stickerPackageId,
+    input#node-input-stickerId{
+        text-align: end;
+        width:50px !important;
+    }
+</style>
 
 <script type="text/x-red" data-help-name="line-notify">
 </script>
@@ -35,17 +56,19 @@
             message: {
                 value: "Hello!"
             },
-            imegetype:{
-                value: "thumbnail"
+            contentType:{
+                value: "message"
             },
             imageUrl:{
                 value:""
             },
             stickerPackageId: {
-                value: "1"
+                value: "1",
+                validate:RED.validators.number()
             },
             stickerId: {
-                value: "1"
+                value: "1",
+                validate:RED.validators.number()
             },
         },
         credentials:{
@@ -58,6 +81,39 @@
         icon: "light.png",
         label: function () {
             return this.name || "linebot-reply";
+        },
+        oneditprepare: function() {
+            $("#node-input-stickerPackageId").spinner({min: 1});
+            $("#node-input-stickerId").spinner({min: 1});
+
+            $("#select-contentType option").filter(function() {
+                var v = $("#node-input-contentType").val();
+                toggleType(v);
+                return $(this).val() == v;
+            }).attr('selected', true);
+
+            $("#select-contentType").change(function() {
+                var v = $("#select-contentType option:selected").val();
+                toggleType(v);
+                $("#node-input-contentType").val(v);
+            });
+
+            function toggleType(v){
+                switch(v){
+                    case "message":
+                        $(".line-type-imageUrl").hide();
+                        $(".line-type-sticker").hide();
+                        break;
+                    case "imageUrl":
+                        $(".line-type-imageUrl").show();
+                        $(".line-type-sticker").hide();
+                        break;
+                    case "sticker":
+                        $(".line-type-imageUrl").hide();
+                        $(".line-type-sticker").show();
+                        break;
+                }
+            }
         }
     });
 </script>

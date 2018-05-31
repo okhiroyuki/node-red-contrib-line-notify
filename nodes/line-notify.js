@@ -5,18 +5,62 @@ module.exports = function(RED) {
     const qs = require('querystring');
     const BASE_URL = 'https://notify-api.line.me';
     const PATH =  '/api/notify';
+    const contentTypes = ['message',"imageUrl","sticker"];
 
     function LineNotifyNode(n) {
         RED.nodes.createNode(this, n);
-        var node = this;
+        let node = this;
         node.message = n.message;
         node.accessToken = this.credentials.accessToken;
-        node.stickerPackageId = n.stickerPackageId;
-        node.stickerId = n.stickerId;
+        node.stickerPackageId = Number(n.stickerPackageId);
+        node.stickerId = Number(n.stickerId);
+        node.imageUrl = n.imageUrl;
+        node.contentType = n.contentType;
 
         node.on('input', function(msg) {
+            if(msg.content !== undefined && contentTypes.indexOf(msg.content) !== -1){
+                node.type = msg.type;
+            }
             if(msg.message !== undefined && typeof msg.message === 'string'){
                 node.message = msg.message;
+            }
+            switch(node.contentType){
+                case 'imageUrl':
+                    if(msg.url !== undefined && typeof msg.url === 'string'){
+                        node.imageUrl = msg.imageUrl;
+                    }
+                    break;
+                case 'sticker':
+                    if(msg.spid !== undefined && typeof msg.spid === 'number'){
+                        node.stickerPackageId = msg.spid;
+                    }
+                    if(msg.sid !== undefined && typeof msg.sid === 'number'){
+                        node.stickerId = msg.sid;
+                    }
+                    break;
+            }
+
+            let datajson;
+            switch(node.contentType){
+                case "message":
+                    datajson = {
+                        message: node.message
+                    };
+                    break;
+                case "imageUrl":
+                    datajson = {
+                        message: node.message,
+                        imageThumbnail: node.imageUrl,
+                        imageFullsize: node.imageUrl
+                    };
+                    break;
+                case "sticker":
+                    datajson = {
+                        message: node.message,
+                        stickerPackageId: node.stickerPackageId,
+                        stickerId: node.stickerId
+                    };
+                    break;
             }
 
             let lineconfig = {
@@ -27,16 +71,11 @@ module.exports = function(RED) {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': 'Bearer ' + node.accessToken
                 },
-                data: qs.stringify({
-                    message: node.message,
-                    stickerPackageId: node.stickerPackageId,
-                    stickerId: node.stickerId
-                })
+                data: qs.stringify(datajson)
             };
 
             axios.request(lineconfig)
             .then((res) => {
-                console.log(res);
                 node.status({
                     fill: "blue",
                     shape: "dot",
@@ -44,7 +83,6 @@ module.exports = function(RED) {
                 });
             })
             .catch((error) => {
-                console.log(error);
                 node.status({
                     fill: "red",
                     shape: "ring",

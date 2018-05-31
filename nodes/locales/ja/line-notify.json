@@ -1,0 +1,19 @@
+{
+    "line-notify": {
+        "label": {
+            "message": "ﾒｯｾｰｼ",
+            "accessToken": "ｱｸｾｽﾄｰｸﾝ",
+            "type": "ｺﾝﾃﾝﾂﾀｲﾌﾟ",
+            "url": "URL",
+            "stickerPackageId": "PackageId",
+            "stickerId": "ID"
+        },
+        "type":{
+            "message": "メッセージ",
+            "imageUrl": "画像URL",
+            "sticker": "ステッカー"
+        },
+        "errors": {
+        }
+    }
+}
