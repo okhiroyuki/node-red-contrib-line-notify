@@ -18,8 +18,8 @@ module.exports = function(RED) {
         node.contentType = n.contentType;
 
         node.on('input', function(msg) {
-            if(msg.content !== undefined && contentTypes.indexOf(msg.content) !== -1){
-                node.type = msg.type;
+            if(msg.contentType !== undefined && contentTypes.indexOf(msg.contentType) !== -1){
+                node.type = msg.contentType;
             }
             if(msg.message !== undefined && typeof msg.message === 'string'){
                 node.message = msg.message;
