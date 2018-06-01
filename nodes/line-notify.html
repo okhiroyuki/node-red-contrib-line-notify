@@ -17,8 +17,9 @@
         <input type="hidden" id="node-input-contentType">
     </div>
     <div class="form-row">
-        <label for="node-input-message"> <i class="fa fa-volume-up fa-fw"></i> <span data-i18n="line-notify.label.message"></label>
-        <input type="text" id="node-input-message" placeholder="message">
+        <label for="node-input-message"></label>
+        <div style="height: 250px;" class="node-text-editor" id="line-message-editor"></div>
+        <input type="hidden" id="node-input-message">
     </div>
     <div class="form-row line-type-imageUrl" hidden>
         <label for="node-input-url"> <i class="fa fa-globe fa-fw"></i> <span data-i18n="line-notify.label.url"></label>
@@ -86,6 +87,18 @@
             $("#node-input-stickerPackageId").spinner({min: 1});
             $("#node-input-stickerId").spinner({min: 1});
 
+            this.editor = RED.editor.createEditor({
+                id: 'line-message-editor',
+                mode: 'ace/mode/text',
+                value: $("#node-input-message").val()
+            });
+            this.editor.$blockScrolling = Infinity;
+            this.editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableSnippets: true,
+                enableLiveAutocompletion: true
+            });
+
             $("#select-contentType option").filter(function() {
                 var v = $("#node-input-contentType").val();
                 toggleType(v);
@@ -114,6 +127,10 @@
                         break;
                 }
             }
+        },
+        oneditsave: function() {
+            $("#node-input-message").val(this.editor.getValue());
+            delete this.editor;
         }
     });
 </script>

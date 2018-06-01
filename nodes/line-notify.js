@@ -31,11 +31,11 @@ module.exports = function(RED) {
                     }
                     break;
                 case 'sticker':
-                    if(msg.spid !== undefined && typeof msg.spid === 'number'){
+                    if(msg.stickerPackageId !== undefined && typeof msg.stickerPackageId === 'number'){
                         node.stickerPackageId = msg.spid;
                     }
-                    if(msg.sid !== undefined && typeof msg.sid === 'number'){
-                        node.stickerId = msg.sid;
+                    if(msg.stickerId !== undefined && typeof msg.stickerId === 'number'){
+                        node.stickerId = msg.stickerId;
                     }
                     break;
             }
