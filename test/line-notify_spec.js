@@ -21,8 +21,11 @@ describe("Ngrok Node", () => {
     });
 
     it("should be loaded", (done) => {
-        const flow = [{ id: "n1", type: "line-notify", name: "test" }];
-        helper.load(node, flow, () => {
+        const flow = [
+            { id: "n1", type: "line-notify", creds: "creds", name: "test"},
+            { id: "creds", type: "linetoken"}
+        ];
+        helper.load(node, flow, {creds:{accessToken: line_token}}, () => {
             const n1 = helper.getNode("n1");
             n1.should.have.property("name", "test");
             done();
@@ -31,71 +34,62 @@ describe("Ngrok Node", () => {
 
     (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should make payload", () => {
         it("send message", (done) => {
-            let isDone = false;
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"ci test", contentType: "message"},
-                ];
-                helper.load(node, flow, {n1:{accessToken:line_token}},() => {
-                    const n1 = helper.getNode("n1");
-                    n1.on("call:error", (err) => {
-                        if(!isDone){
-                            isDone = true;
-                            done(err);
-                    }
+                { id: "n1", type: "line-notify", name: "test", message:"ci test", creds: "creds", contentType: "message", wires:[["n2"]]},
+                { id: "creds", type: "linetoken"},
+                { id: "n2", type: "helper" }
+            ];
+            helper.load(node, flow, {creds:{accessToken: line_token}},() => {
+                const n2 = helper.getNode("n2");
+                const n1 = helper.getNode("n1");
+                n2.on("input", (msg) => {
+                    should.equal(msg.payload.status,200);
+                    done();
                 });
-                n1.receive({});
-                setTimeout(()=>{
-                    if(!isDone){
-                        isDone = true;
-                        done();
-                    }
-                },1000)
+                n1.on("call:error", (err) => {
+                    done(err);
+                });
+                n1.receive({payload: "test"});
             });
         });
 
         it("send sticker", (done) => {
-            let isDone = false;
             const flow = [
-                    { id: "n1", type: "line-notify", name: "test", message:"ci test", contentType: "sticker", stickerPackageId: 1, stickerId: 3},
-                ];
-                helper.load(node, flow, {n1:{accessToken:line_token}},() => {
-                    const n1 = helper.getNode("n1");
-                    n1.on("call:error", (err) => {
-                        if(!isDone){
-                            isDone = true;
-                            done(err);
-                    }
+                { id: "n1", type: "line-notify", name: "test", message:"ci test", creds: "creds", contentType: "sticker", stickerPackageId: 1, stickerId: 3, wires:[["n2"]]},
+                { id: "creds", type: "linetoken"},
+                { id: "n2", type: "helper" }    
+            ];
+            helper.load(node, flow, {creds:{accessToken: line_token}},() => {
+                const n2 = helper.getNode("n2");
+                const n1 = helper.getNode("n1");
+                n2.on("input", (msg) => {
+                    should.equal(msg.payload.status,200);
+                    done();
                 });
-                n1.receive({});
-                setTimeout(()=>{
-                    if(!isDone){
-                        isDone = true;
-                        done();
-                    }
-                },1000)
+                n1.on("call:error", (err) => {
+                    done(err);
+                });
+                n1.receive({payload: "test"});
             });
         });
 
         it("send image", (done) => {
-            let isDone = false;
             const flow = [
-                    { id: "n1", type: "line-notify", name: "test", message:"ci test", contentType: "imageUrl", imageUrl: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"},
-                ];
-                helper.load(node, flow, {n1:{accessToken:line_token}},() => {
-                    const n1 = helper.getNode("n1");
-                    n1.on("call:error", (err) => {
-                        if(!isDone){
-                            isDone = true;
-                            done(err);
-                    }
+                { id: "n1", type: "line-notify", name: "test", message:"ci test", creds: "creds", contentType: "imageUrl", imageUrl: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", wires:[["n2"]]},
+                { id: "creds", type: "linetoken"},
+                { id: "n2", type: "helper" } 
+            ];
+            helper.load(node, flow, {creds:{accessToken: line_token}},() => {
+                const n2 = helper.getNode("n2");
+                const n1 = helper.getNode("n1");
+                n2.on("input", (msg) => {
+                    should.equal(msg.payload.status,200);
+                    done();
                 });
-                n1.receive({});
-                setTimeout(()=>{
-                    if(!isDone){
-                        isDone = true;
-                        done();
-                    }
-                },1000)
+                n1.on("call:error", (err) => {
+                    done(err);
+                });
+                n1.receive({payload: "test"});
             });
         });
     });
@@ -103,8 +97,9 @@ describe("Ngrok Node", () => {
     it("should make payload without token", (done) => {
         const flow = [
             { id: "n1", type: "line-notify", name: "test", message:"ci test", contentType: "message"},
+            { id: "creds", type: "linetoken"}
         ];
-        helper.load(node, flow, {n1:{accessToken:"dummy"}},() => {
+        helper.load(node, flow, {creds:{accessToken: "dummy"}}, () => {
             const n1 = helper.getNode("n1");
             n1.on("call:error", (err) => {
                 done();
