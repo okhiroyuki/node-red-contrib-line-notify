@@ -29,7 +29,7 @@ describe("Ngrok Node", () => {
         });
     });
 
-    describe("should make payload", () => {
+    (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should make payload", () => {
         it("send message", (done) => {
             let isDone = false;
             const flow = [
