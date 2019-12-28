@@ -3,6 +3,7 @@ const helper = require("node-red-node-test-helper");
 helper.init(require.resolve("node-red"));
 
 const node = require("../nodes/line-notify");
+let line_token;
 
 describe("Ngrok Node", () => {
 
