@@ -2,12 +2,13 @@
     "line-notify": {
         "label": {
             "name": "Name",
-            "accessToken": "AccessToken",
+            "accessToken": "Token",
             "message": "Message",
             "type": "ContentType",
             "url": "URL",
             "tickerPackageId": "PackageId",
-            "tickerId": "Id"
+            "tickerId": "Id",
+            "silent": "Silent"
         },
         "type":{
             "message": "Message",
@@ -15,6 +16,12 @@
             "sticker": "Sticker"
         },
         "errors": {
+        }
+    },
+    "linetoken":{
+        "linentoken": "Line Token",
+        "label": {
+            "accessToken": "Token"
         }
     }
 }

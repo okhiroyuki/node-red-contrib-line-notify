@@ -5,62 +5,73 @@ module.exports = function(RED) {
     const qs = require('querystring');
     const BASE_URL = 'https://notify-api.line.me';
     const PATH =  '/api/notify';
-    const contentTypes = ['message',"imageUrl","sticker"];
+
+    function validateString(value){
+        return typeof value === 'string'
+    }
+
+    function isImageUrl(node){
+        return node.contentType === "imageUrl";
+    }
+
+    function isSticker(node){
+        return node.contentType === "sticker";
+    }
+
+    function validateNumber(value){
+        return typeof value === 'number';
+    }
 
     function LineNotifyNode(n) {
         RED.nodes.createNode(this, n);
+        this.message = n.message;
+        this.stickerPackageId = Number(n.stickerPackageId);
+        this.stickerId = Number(n.stickerId);
+        this.imageUrl = n.imageUrl;
+        this.contentType = n.contentType;
+        this.silent = n.silent;
+        if (RED.nodes.getNode(n.creds)){
+            this.accessToken = RED.nodes.getNode(n.creds).credentials.accessToken;
+        } else {
+            this.accessToken = "";
+        }
         let node = this;
-        node.message = n.message;
-        node.accessToken = this.credentials.accessToken;
-        node.stickerPackageId = Number(n.stickerPackageId);
-        node.stickerId = Number(n.stickerId);
-        node.imageUrl = n.imageUrl;
-        node.contentType = n.contentType;
 
         node.on('input', function(msg) {
-            if(msg.contentType !== undefined && contentTypes.indexOf(msg.contentType) !== -1){
-                node.contentType = msg.contentType;
+            if(!node.accessToken){
+                sendError(node, "toeken is empty");
+                return;
             }
-            if(msg.message !== undefined && typeof msg.message === 'string'){
+            if(!node.message && validateString(msg.message)){
                 node.message = msg.message;
             }
-            switch(node.contentType){
-                case 'imageUrl':
-                    if(msg.url !== undefined && typeof msg.url === 'string'){
-                        node.imageUrl = msg.imageUrl;
-                    }
-                    break;
-                case 'sticker':
-                    if(msg.stickerPackageId !== undefined && typeof msg.stickerPackageId === 'number'){
-                        node.stickerPackageId = msg.spid;
-                    }
-                    if(msg.stickerId !== undefined && typeof msg.stickerId === 'number'){
-                        node.stickerId = msg.stickerId;
-                    }
-                    break;
-            }
 
-            let datajson;
-            switch(node.contentType){
-                case "message":
-                    datajson = {
-                        message: node.message
-                    };
-                    break;
-                case "imageUrl":
-                    datajson = {
-                        message: node.message,
-                        imageThumbnail: node.imageUrl,
-                        imageFullsize: node.imageUrl
-                    };
-                    break;
-                case "sticker":
-                    datajson = {
-                        message: node.message,
-                        stickerPackageId: node.stickerPackageId,
-                        stickerId: node.stickerId
-                    };
-                    break;
+            let datajson = {
+                message: node.message
+            };
+            if(node.silent){
+                datajson.notificationDisabled = true;
+            }
+            if(isImageUrl(node)){
+                if(node.imageUrl && validateString(msg.url)){
+                    datajson.imageThumbnail = msg.imageUrl;
+                    datajson.imageFullsize = msg.imageUrl;
+                }else{
+                    datajson.imageThumbnail = node.imageUrl;   
+                    datajson.imageFullsize = node.imageUrl;   
+                }
+            }
+            if(isSticker(node)){
+                if(validateNumber(msg.stickerPackageId) && node.stickerPackageId === -1){
+                    datajson.stickerPackageId = msg.stickerPackageId;
+                }else{
+                    datajson.stickerPackageId = node.stickerPackageId;
+                }
+                if(validateNumber(msg.stickerId) && node.stickerId === -1){
+                    datajson.stickerId = msg.stickerId;
+                }else{
+                    datajson.stickerId = node.stickerId;
+                }
             }
 
             let lineconfig = {
@@ -76,6 +87,8 @@ module.exports = function(RED) {
 
             axios.request(lineconfig)
             .then((res) => {
+                msg.payload = res.data;
+                node.send(msg);
                 node.status({
                     fill: "blue",
                     shape: "dot",
@@ -83,19 +96,34 @@ module.exports = function(RED) {
                 });
             })
             .catch((error) => {
-                node.error(error.message);
-                node.status({
-                    fill: "red",
-                    shape: "ring",
-                    text: error.message
-                });
+                sendError(node, error.message);
             });
         });
+    }
+
+    function sendError(node, message){
+        node.error(message);
+        node.status({
+            fill: "red",
+            shape: "ring",
+            text: message
+        });
+    }
+
+    function linetoken(n){
+        RED.nodes.createNode(this, n);
+        this.accessToken = n.accessToken;
     }
 
     RED.nodes.registerType("line-notify", LineNotifyNode, {
         credentials: {
             accessToken: {type:"text"}
+        }
+    });
+
+    RED.nodes.registerType("linetoken", linetoken,{
+        credentials: {
+          accessToken: {type:"text"}
         }
     });
 }

@@ -6,7 +6,8 @@
             "type": "ｺﾝﾃﾝﾂﾀｲﾌﾟ",
             "url": "URL",
             "stickerPackageId": "PackageId",
-            "stickerId": "ID"
+            "stickerId": "ID",
+            "silent": "通知なし"
         },
         "type":{
             "message": "メッセージ",
@@ -14,6 +15,12 @@
             "sticker": "ステッカー"
         },
         "errors": {
+        }
+    },
+    "linetoken":{
+        "linetoken": "Line Token",
+        "label": {
+            "accessToken": "ｱｸｾｽﾄｰｸﾝ"
         }
     }
 }

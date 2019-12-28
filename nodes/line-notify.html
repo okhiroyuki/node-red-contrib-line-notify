@@ -4,8 +4,8 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-accessToken"> <i class="fa fa-key fa-fw"></i> <span data-i18n="line-notify.label.accessToken"></span></label>
-        <input type="text" id="node-input-accessToken" placeholder="AccessToken">
+        <label for="node-input-creds"> <i class="fa fa-key fa-fw"></i> <span data-i18n="line-notify.label.accessToken"></span></label>
+        <input type="text" id="node-input-creds">
     </div>
     <div class="form-row">
         <label for="node-input-contentType"><i class="fa fa-list fa-fw"></i> <span data-i18n="line-notify.label.type"></span></label>
@@ -32,6 +32,10 @@
     <div class="form-row line-type-sticker" hidden>
         <label for="node-input-stickerId"> <i class="fa fa-info fa-fw"></i> <span data-i18n="line-notify.label.stickerId"></label>
         <input type="text" id="node-input-stickerId">
+    </div>
+    <div class="form-row">
+        <label for="node-input-silent"> <i class="fa fa-info fa-fw"></i> <span data-i18n="line-notify.label.silent"></label>
+        <input type="checkbox" id="node-input-silent">
     </div>
 </script>
 
@@ -71,14 +75,16 @@
                 value: "1",
                 validate:RED.validators.number()
             },
-        },
-        credentials:{
-            accessToken:{
-                type: "text"
-            }
+            silent:{
+                value: false
+            },
+            creds: {
+                value: "",
+                type: "linetoken"
+            },
         },
         inputs: 1,
-        outputs: 0,
+        outputs: 1,
         icon: "light.png",
         label: function () {
             return this.name || "linebot-reply";
@@ -133,4 +139,31 @@
             delete this.editor;
         }
     });
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('linetoken', {
+        category: 'config',
+        defaults: {
+            name: {value:""}
+        },
+        credentials: {
+            accessToken: {},
+        },
+        label: function () {
+            return this.name || this._("linetoken.linetoken");
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="linetoken">
+    <div class="form-row">
+        <label for="node-input-name"> <i class="fa fa-tag fa-fw"></i> <span data-i18n="line-notify.label.name"></span></label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+      <label for="node-config-input-accessToken"> <span data-i18n="linetoken.label.accessToken"></span></label>
+      <input type="text" id="node-config-input-accessToken" placeholder="token">
+  </div>
 </script>
