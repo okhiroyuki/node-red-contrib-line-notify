@@ -90,8 +90,8 @@
             return this.name || "linebot-reply";
         },
         oneditprepare: function() {
-            $("#node-input-stickerPackageId").spinner({min: 1});
-            $("#node-input-stickerId").spinner({min: 1});
+            $("#node-input-stickerPackageId").spinner({min: -1});
+            $("#node-input-stickerId").spinner({min: -1});
 
             this.editor = RED.editor.createEditor({
                 id: 'line-message-editor',
@@ -137,6 +137,14 @@
         oneditsave: function() {
             $("#node-input-message").val(this.editor.getValue());
             delete this.editor;
+            var sp = $("#node-input-stickerPackageId").val();
+            if(sp <= 0 && sp != -1){
+                $("#node-input-stickerPackageId").val(1);
+            }
+            var s = $("#node-input-stickerId").val();
+            if(s <= 0 && s != -1){
+                $("#node-input-stickerId").val(1);
+            }
         }
     });
 </script>

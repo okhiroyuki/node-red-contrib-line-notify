@@ -42,8 +42,12 @@ module.exports = function(RED) {
                 sendError(node, "toeken is empty");
                 return;
             }
-            if(!node.message && validateString(msg.message)){
-                node.message = msg.message;
+            if(validateString(msg.message)){
+                if(!node.message){
+                    node.message = msg.message;
+                }else{
+                    node.warn(RED._("line-notify.warn.nooverride.message"));
+                }    
             }
 
             let datajson = {
@@ -53,22 +57,38 @@ module.exports = function(RED) {
                 datajson.notificationDisabled = true;
             }
             if(isImageUrl(node)){
-                if(node.imageUrl && validateString(msg.url)){
-                    datajson.imageThumbnail = msg.imageUrl;
-                    datajson.imageFullsize = msg.imageUrl;
+                if(validateString(msg.imageUrl)){
+                    if(node.imageUrl){
+                        datajson.imageThumbnail = node.imageUrl;   
+                        datajson.imageFullsize = node.imageUrl;   
+                        node.warn(RED._("line-notify.warn.nooverride.imageUrl"));
+                    }else{
+                        datajson.imageThumbnail = msg.imageUrl;
+                        datajson.imageFullsize = msg.imageUrl;    
+                    }
                 }else{
                     datajson.imageThumbnail = node.imageUrl;   
                     datajson.imageFullsize = node.imageUrl;   
                 }
             }
             if(isSticker(node)){
-                if(validateNumber(msg.stickerPackageId) && node.stickerPackageId === -1){
-                    datajson.stickerPackageId = msg.stickerPackageId;
+                if(validateNumber(msg.stickerPackageId)){
+                    if(node.stickerPackageId === -1){
+                        datajson.stickerPackageId = msg.stickerPackageId;
+                    }else{
+                        datajson.stickerPackageId = node.stickerPackageId;
+                        node.warn(RED._("line-notify.warn.nooverride.stickerPackageId"));
+                    }
                 }else{
                     datajson.stickerPackageId = node.stickerPackageId;
                 }
-                if(validateNumber(msg.stickerId) && node.stickerId === -1){
-                    datajson.stickerId = msg.stickerId;
+                if(validateNumber(msg.stickerId)){
+                    if(node.stickerId === -1){
+                        datajson.stickerId = msg.stickerId;
+                    }else{
+                        datajson.stickerId = node.stickerId;
+                        node.warn(RED._("line-notify.warn.nooverride.stickerId"));    
+                    }
                 }else{
                     datajson.stickerId = node.stickerId;
                 }

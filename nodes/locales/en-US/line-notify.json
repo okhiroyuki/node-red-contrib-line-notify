@@ -15,7 +15,13 @@
             "imageUrl": "ImageURL",
             "sticker": "Sticker"
         },
-        "errors": {
+        "warn": {
+            "nooverride":{
+                "message": "Warning: message properties can not override.",
+                "imageUrl": "Warning: imageUrl properties can not override.",
+                "stikerId": "Warning: stikerId properties can not override.",
+                "stickerPackageId": "Warning: stickerPackageId properties can not override."
+            }
         }
     },
     "linetoken":{
