@@ -1,22 +1,19 @@
 # node-red-contrib-line-notify
+
 An easy-to-use NodeRED node for sending Line Notify.
 
-簡単にライン通知を送ることができるノードです。
+## Install
 
-# Install
 Run the following command in your Node-RED user directory - typically ~/.node-red
 
-下記のコマンドでインストールください。
-
-```
+```shell
 npm install node-red-contrib-line-notify
 ```
 
-# Node Image
+## Usages
 
-![image](https://user-images.githubusercontent.com/23309/40847470-7283612a-65f7-11e8-8009-af163c805c00.png)
+1. Obtain an access token with [LINE Notify](https://notify-bot.line.me/en/) and set it in the linetoken node.
+2. Enter necessary items on the setting screen and execute.
+3. LINE receives notification.
 
-<img width="255" alt="skillcreator 2018-06-01 23-57-31" src="https://user-images.githubusercontent.com/23309/40847532-9e6c56fc-65f7-11e8-8a82-49a2c7930e48.png">
-
-![image](https://user-images.githubusercontent.com/23309/40847395-381c263e-65f7-11e8-80a6-ba811513e57f.png)
-
+For further details of see [LINE Notify API Document](https://notify-bot.line.me/doc/en/).
