@@ -17,7 +17,7 @@
         <input type="hidden" id="node-input-contentType">
     </div>
     <div class="form-row">
-        <label for="node-input-message"></label>
+        <label for="node-input-message"><i class="fa fa-comment fa-fw"></i> <span data-i18n="line-notify.label.message"></span></label>
         <div style="height: 250px;" class="node-text-editor" id="line-message-editor"></div>
         <input type="hidden" id="node-input-message">
     </div>
@@ -26,11 +26,19 @@
         <input type="text" id="node-input-imageUrl">
     </div>
     <div class="form-row line-type-sticker" hidden>
-        <label for="node-input-stickerPackageId"> <i class="fa fa-info fa-fw"></i> <span data-i18n="line-notify.label.stickerPackageId"></label>
+        <label for="node-input-sticker"><i class="fa fa-list fa-fw"></i> <span data-i18n="line-notify.label.sticker"></span></label>
+        <select type="text" id="select-sticker">
+            <option value="default" data-i18n="line-notify.sticker.default"></option>
+            <option value="msg" data-i18n="line-notify.sticker.msg"></option>
+        </select>
+        <input type="hidden" id="node-input-sticker">
+    </div>
+    <div class="form-row line-sticker" hidden>
+        <label for="node-input-stickerPackageId"> <i class="fa fa-fw"></i> <span data-i18n="line-notify.label.stickerPackageId"></label>
         <input type="text" id="node-input-stickerPackageId">
     </div>
-    <div class="form-row line-type-sticker" hidden>
-        <label for="node-input-stickerId"> <i class="fa fa-info fa-fw"></i> <span data-i18n="line-notify.label.stickerId"></label>
+    <div class="form-row line-sticker" hidden>
+        <label for="node-input-stickerId"> <i class="fa fa-fw"></i> <span data-i18n="line-notify.label.stickerId"></label>
         <input type="text" id="node-input-stickerId">
     </div>
     <div class="form-row">
@@ -67,6 +75,9 @@
             imageUrl:{
                 value:""
             },
+            sticker:{
+                value: "default"
+            },
             stickerPackageId: {
                 value: "1",
                 validate:RED.validators.number()
@@ -87,11 +98,11 @@
         outputs: 1,
         icon: "light.png",
         label: function () {
-            return this.name || "linebot-reply";
+            return this.name || this._("line-notify.line-notify");
         },
         oneditprepare: function() {
-            $("#node-input-stickerPackageId").spinner({min: -1});
-            $("#node-input-stickerId").spinner({min: -1});
+            $("#node-input-stickerPackageId").spinner({min: 1});
+            $("#node-input-stickerId").spinner({min: 1});
 
             this.editor = RED.editor.createEditor({
                 id: 'line-message-editor',
@@ -122,15 +133,40 @@
                     case "message":
                         $(".line-type-imageUrl").hide();
                         $(".line-type-sticker").hide();
+                        $(".line-sticker").hide();
                         break;
                     case "imageUrl":
                         $(".line-type-imageUrl").show();
                         $(".line-type-sticker").hide();
+                        $(".line-sticker").hide();
                         break;
                     case "sticker":
                         $(".line-type-imageUrl").hide();
                         $(".line-type-sticker").show();
+                        setSticker();
                         break;
+                }
+            }
+
+            function setSticker(){
+                $("#select-sticker option").filter(function() {
+                    var v = $("#node-input-sticker").val();
+                    toggleSticker(v);
+                    return $(this).val() == v;
+                }).attr('selected', true);
+
+                $("#select-sticker").change(function() {
+                    var v = $("#select-sticker option:selected").val();
+                    toggleSticker(v);
+                    $("#node-input-sticker").val(v);
+                });
+            }
+
+            function toggleSticker(v){
+                if(v === "msg"){
+                    $(".line-sticker").hide();
+                }else{
+                    $(".line-sticker").show();
                 }
             }
         },
@@ -138,11 +174,11 @@
             $("#node-input-message").val(this.editor.getValue());
             delete this.editor;
             var sp = $("#node-input-stickerPackageId").val();
-            if(sp <= 0 && sp != -1){
+            if(sp < 1){
                 $("#node-input-stickerPackageId").val(1);
             }
             var s = $("#node-input-stickerId").val();
-            if(s <= 0 && s != -1){
+            if(s < 1){
                 $("#node-input-stickerId").val(1);
             }
         }
