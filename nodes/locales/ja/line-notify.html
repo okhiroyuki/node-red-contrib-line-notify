@@ -5,7 +5,9 @@
         <dt class="optional">message <span class="property-type">string</span></dt>
         <dd>メッセージ</dd>
         <dt class="optional">imageUrl <span class="property-type">string</span></dt>
-        <dd>画像URL</dd>
+        <dd>Maximum size of 2048×2048px JPEG</dd>
+        <dt class="optional">imageThumbnail <span class="property-type">string</span></dt>
+        <dd>Maximum size of 240×240px JPEG</dd>
         <dt class="optional">stickerPackageId <span class="property-type">number</span></dt>
         <dd>ステッカーパッケージId</dd>
         <dt class="optional">stickerId <span class="property-type">number</span></dt>
@@ -13,6 +15,7 @@
     </dl>
     <h3>詳細</h3>
     <p>メッセージおよび画像URLは、設定した値が空の場合のみmsg変数で上書きすることが可能です。</p>
+    <p>サムネイルが指定されていない場合は、フルサイズの画像URLで上書きします。</p>
     <p>詳しくは、<a href="https://notify-bot.line.me/doc/ja/">LINE Notify API Document</a>を参照ください。</p>
 </script>
 

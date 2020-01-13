@@ -5,7 +5,9 @@
         <dt class="optional">message <span class="property-type">string</span></dt>
         <dd>message</dd>
         <dt class="optional">imageUrl <span class="property-type">string</span></dt>
-        <dd>imeage url</dd>
+        <dd>Maximum size of 2048×2048px JPEG</dd>
+        <dt class="optional">imageThumbnail <span class="property-type">string</span></dt>
+        <dd>Maximum size of 240×240px JPEG</dd>
         <dt class="optional">stickerPackageId <span class="property-type">number</span></dt>
         <dd>sticker packageId</dd>
         <dt class="optional">stickerId <span class="property-type">number</span></dt>
@@ -13,6 +15,7 @@
     </dl>
     <h3>Detials</h3>
     <p>Message and image URL can be overwritten with msg variable only when the set value is empty.</p>
+    <p>If no thumbnail is specified, it will be overwritten with the full size image URL.</p>
     <p>For further details of see <a href="https://notify-bot.line.me/doc/en/">LINE Notify API Document</a>.</p>
 </script>
 

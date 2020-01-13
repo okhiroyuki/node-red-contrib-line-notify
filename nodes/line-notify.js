@@ -26,6 +26,13 @@ module.exports = function(RED) {
         return node.sticker === "msg";
     }
 
+    function trimDataJson(json){
+        if(!json.imageThumbnail){
+            delete json.imageThumbnail
+        }
+        return json;
+    }
+
     function LineNotifyNode(n) {
         RED.nodes.createNode(this, n);
         this.message = n.message;
@@ -33,6 +40,7 @@ module.exports = function(RED) {
         this.stickerPackageId = Number(n.stickerPackageId);
         this.stickerId = Number(n.stickerId);
         this.imageUrl = n.imageUrl;
+        this.imageThumbnail = n.imageThumbnail;
         this.contentType = n.contentType;
         this.silent = n.silent;
         if (RED.nodes.getNode(n.creds)){
@@ -62,18 +70,31 @@ module.exports = function(RED) {
                 datajson.notificationDisabled = true;
             }
             if(isImageUrl(node)){
+                if(validateString(msg.imageThumbnail)){
+                    if(node.imageThumbnail){
+                        datajson.imageThumbnail = node.imageThumbnail;
+                        node.warn(RED._("line-notify.warn.nooverride.imageThumbnail"));
+                    }else{
+                        datajson.imageThumbnail = msg.imageThumbnail;
+                    }
+                }else{
+                    datajson.imageThumbnail = node.imageThumbnail;
+                }
                 if(validateString(msg.imageUrl)){
                     if(node.imageUrl){
-                        datajson.imageThumbnail = node.imageUrl;   
                         datajson.imageFullsize = node.imageUrl;   
                         node.warn(RED._("line-notify.warn.nooverride.imageUrl"));
                     }else{
-                        datajson.imageThumbnail = msg.imageUrl;
                         datajson.imageFullsize = msg.imageUrl;    
                     }
                 }else{
-                    datajson.imageThumbnail = node.imageUrl;   
                     datajson.imageFullsize = node.imageUrl;   
+                }
+                if(!datajson.imageFullsize){
+                    sendError(node, RED._("line-notify.errors.imageUrl"));
+                }
+                if(!datajson.imageThumbnail){
+                    datajson.imageThumbnail = datajson.imageFullsize;
                 }
             }
             if(isSticker(node)){
@@ -106,7 +127,7 @@ module.exports = function(RED) {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': 'Bearer ' + node.accessToken
                 },
-                data: qs.stringify(datajson)
+                data: qs.stringify(trimDataJson(datajson))
             };
 
             axios.request(lineconfig).then((res) => {

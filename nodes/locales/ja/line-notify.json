@@ -5,11 +5,14 @@
             "message": "メッセージ",
             "accessToken": "トークン",
             "type": "タイプ",
-            "url": "URL",
             "sticker": "ステッカー",
             "stickerPackageId": "PackageId",
             "stickerId": "ID",
-            "silent": "通知なし"
+            "silent": "通知なし",
+            "image":{
+                "thumbnail": "サムネイル",
+                "fullSize": "フルサイズ"
+            }
         },
         "type":{
             "message": "メッセージのみ",
@@ -22,13 +25,15 @@
         },
         "warn": {
             "nooverride":{
-                "message": "警告： メッセージは設定値が空の場合のみ上書き可能です。",
-                "imageUrl": "警告： 画像URLは設定値が空の場合のみ上書き可能です。"
+                "message": "警告： msg.messageは設定値が空の場合のみ上書き可能です。",
+                "imageUrl": "警告： msg.imageUrlは設定値が空の場合のみ上書き可能です。",
+                "thumbnailUrl": "警告： msg.thumbnailUrlは設定値が空の場合のみ上書き可能です。"
             }
         },
         "errors": {
             "stikerId": "パラメーターエラー： msg.stikerId",
-            "stickerPackageId": "パラメーターエラー： msg.stickerPackageId"
+            "stickerPackageId": "パラメーターエラー： msg.stickerPackageId",
+            "imageUrl": "imageUrlは必ずセットしてください"
         }
     },
     "linetoken":{

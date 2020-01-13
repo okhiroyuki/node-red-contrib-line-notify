@@ -50,7 +50,7 @@ describe("Line Notify Node", () => {
         const tests=[
             {title:"send message" , flow: { id: "n1", type: "line-notify", name: "test", message:"message test", creds: "creds", contentType: "message", wires:[["n2"]]}},
             {title:"send sticker" , flow: { id: "n1", type: "line-notify", name: "test", message:"sticker test", creds: "creds", contentType: "sticker", sticker: "default", stickerPackageId: 1, stickerId: 3, wires:[["n2"]]}},
-            {title:"send image" , flow: { id: "n1", type: "line-notify", name: "test", message:"image test", creds: "creds", contentType: "imageUrl", imageUrl: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", wires:[["n2"]]}}            
+            {title:"send image" , flow: { id: "n1", type: "line-notify", name: "test", message:"image test", creds: "creds", contentType: "imageUrl", imageUrl: "https://dummyimage.com/2028x2048", imageThumbnail: "https://dummyimage.com/240x240", wires:[["n2"]]}}            
         ]
         tests.forEach((test) => {
             it(test.title, (done) => {
@@ -116,7 +116,7 @@ describe("Line Notify Node", () => {
     (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message using msg.imageUrl", () => {
         it("can't overwrite", (done) => {
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite image", creds: "creds", contentType: "imageUrl", imageUrl: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", wires:[["n2"]]},
+                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite image", creds: "creds", contentType: "imageUrl", imageUrl:"https://dummyimage.com/2028x2048", imageThumbnail: "", wires:[["n2"]]},
                 { id: "creds", type: "linetoken"},
                 { id: "n2", type: "helper" }
             ];
@@ -133,9 +133,24 @@ describe("Line Notify Node", () => {
                 n1.receive({imageUrl: "dummy"});
             });    
         });
+        it("no image", (done) => {
+            const flow = [
+                { id: "n1", type: "line-notify", name: "test", message:"can override image", creds: "creds", contentType: "imageUrl", imageUrl:"", imageThumbnail: "", wires:[["n2"]]},
+                { id: "creds", type: "linetoken"},
+                { id: "n2", type: "helper" }
+            ];
+            helper.load(node, flow, {creds:{accessToken: line_token}},() => {
+                const n1 = helper.getNode("n1");
+                n1.on("call:error", (msg) => {
+                    should.equal(msg.lastArg,"line-notify.errors.imageUrl");
+                    done();
+                });
+                n1.receive({});
+            });  
+        });
         it("can overwrite", (done) => {
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"can override image", creds: "creds", contentType: "imageUrl", imageUrl: "", wires:[["n2"]]},
+                { id: "n1", type: "line-notify", name: "test", message:"can override image", creds: "creds", contentType: "imageUrl", imageUrl:"", imageThumbnail: "", wires:[["n2"]]},
                 { id: "creds", type: "linetoken"},
                 { id: "n2", type: "helper" }
             ];
@@ -146,7 +161,45 @@ describe("Line Notify Node", () => {
                     should.equal(msg.payload.status,200);
                     done();
                 });
-                n1.receive({imageUrl: "https://dummyimage.com/640x480"});
+                n1.receive({imageUrl: "https://dummyimage.com/640x640"});
+            });  
+        });
+    });
+
+    (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message using msg.thumbnailUrl", () => {
+        it("can't overwrite", (done) => {
+            const flow = [
+                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite image", creds: "creds", contentType: "imageUrl", imageUrl: "https://dummyimage.com/2048x2048", imageThumbnail: "https://dummyimage.com/240x240", wires:[["n2"]]},
+                { id: "creds", type: "linetoken"},
+                { id: "n2", type: "helper" }
+            ];
+            helper.load(node, flow, {creds:{accessToken: line_token}},() => {
+                const n2 = helper.getNode("n2");
+                const n1 = helper.getNode("n1");
+                n2.on("input", (msg) => {
+                    should.equal(msg.payload.status,200);
+                });
+                n1.on("call:warn", (msg) => {
+                    should.equal(msg.lastArg,"line-notify.warn.nooverride.imageThumbnail");
+                    done();
+                });
+                n1.receive({imageThumbnail: "dummy"});
+            });    
+        });
+        it("can overwrite", (done) => {
+            const flow = [
+                { id: "n1", type: "line-notify", name: "test", message:"can override image", creds: "creds", contentType: "imageUrl", imageUrl: "https://dummyimage.com/2048x2048", imageThumbnail: "", wires:[["n2"]]},
+                { id: "creds", type: "linetoken"},
+                { id: "n2", type: "helper" }
+            ];
+            helper.load(node, flow, {creds:{accessToken: line_token}},() => {
+                const n2 = helper.getNode("n2");
+                const n1 = helper.getNode("n1");
+                n2.on("input", (msg) => {
+                    should.equal(msg.payload.status,200);
+                    done();
+                });
+                n1.receive({imageThumbnail: "https://dummyimage.com/64x64"});
             });  
         });
     });
@@ -154,7 +207,7 @@ describe("Line Notify Node", () => {
     (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message using msg.stickerId", () => {
         it("error", (done) => {
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite stickerId", creds: "creds", contentType: "sticker", sticker: "default", sticker:"msg", stickerPackageId: 1, stickerId: 10, wires:[["n2"]]},
+                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite stickerId", creds: "creds", contentType: "sticker", sticker: "msg", stickerPackageId: 1, stickerId: 10, wires:[["n2"]]},
                 { id: "creds", type: "linetoken"},
                 { id: "n2", type: "helper" }
             ];
