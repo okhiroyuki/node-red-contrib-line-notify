@@ -22,9 +22,14 @@ module.exports = function(RED) {
         return typeof value === 'number';
     }
 
+    function canOverwriteSticker(node){
+        return node.sticker === "msg";
+    }
+
     function LineNotifyNode(n) {
         RED.nodes.createNode(this, n);
         this.message = n.message;
+        this.sticker = n.sticker;
         this.stickerPackageId = Number(n.stickerPackageId);
         this.stickerId = Number(n.stickerId);
         this.imageUrl = n.imageUrl;
@@ -72,24 +77,23 @@ module.exports = function(RED) {
                 }
             }
             if(isSticker(node)){
-                if(validateNumber(msg.stickerPackageId)){
-                    if(node.stickerPackageId === -1){
+                if(canOverwriteSticker(node)){
+                    if(validateNumber(msg.stickerPackageId)){
                         datajson.stickerPackageId = msg.stickerPackageId;
                     }else{
                         datajson.stickerPackageId = node.stickerPackageId;
-                        node.warn(RED._("line-notify.warn.nooverride.stickerPackageId"));
+                        sendError(node, RED._("line-notify.errors.stickerPackageId"));
+                        return;
                     }
-                }else{
-                    datajson.stickerPackageId = node.stickerPackageId;
-                }
-                if(validateNumber(msg.stickerId)){
-                    if(node.stickerId === -1){
+                    if(validateNumber(msg.stickerId)){
                         datajson.stickerId = msg.stickerId;
                     }else{
                         datajson.stickerId = node.stickerId;
-                        node.warn(RED._("line-notify.warn.nooverride.stickerId"));    
+                        sendError(node, RED._("line-notify.errors.stickerId"));
+                        return;
                     }
                 }else{
+                    datajson.stickerPackageId = node.stickerPackageId;
                     datajson.stickerId = node.stickerId;
                 }
             }
@@ -105,15 +109,10 @@ module.exports = function(RED) {
                 data: qs.stringify(datajson)
             };
 
-            axios.request(lineconfig)
-            .then((res) => {
+            axios.request(lineconfig).then((res) => {
                 msg.payload = res.data;
                 node.send(msg);
-                node.status({
-                    fill: "blue",
-                    shape: "dot",
-                    text: "success"
-                });
+                node.status({fill: "blue", shape: "dot", text: "success"});
             })
             .catch((error) => {
                 sendError(node, error.message);
@@ -123,11 +122,7 @@ module.exports = function(RED) {
 
     function sendError(node, message){
         node.error(message);
-        node.status({
-            fill: "red",
-            shape: "ring",
-            text: message
-        });
+        node.status({ fill: "red", shape: "ring", text: message});
     }
 
     function linetoken(n){

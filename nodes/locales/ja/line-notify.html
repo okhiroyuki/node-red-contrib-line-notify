@@ -2,51 +2,20 @@
     <p>ラインの通知を送るノードです</p>
     <h3>入力</h3>
     <dl class="message-properties">
-        <dt class="optional">accessToken
-            <span class="property-type">string</span>
-        </dt>
-        <dd><a href="https://notify-bot.line.me/ja/">LINE Notify</a>で取得したアクセストークンを入力ください。</dd>
-    </dl>
-    <dl class="message-properties">
-        <dt class="optional">contentType
-            <span class="property-type">string</span>
-        </dt>
-        <dd>下記の中から選択ください。</dd>
-        <ul>
-            <li>
-                <code>message</code>: メッセージのみ</li>
-            <li>
-                <code>imageUrl</code>: メッセージ + 画像URL</li>
-            <li>
-                <code>sticker</code>: メッセージ + ステッカー</li>
-        </ul>
-    </dl>
-    <dl class="message-properties">
-        <dt class="optional">message
-            <span class="property-type">string</span>
-        </dt>
-        <dd>メッセージを入力してください。</dd>
-    </dl>
-    <dl class="message-properties">
-        <dt class="optional">imageUrl
-            <span class="property-type">string</span>
-        </dt>
-        <dd>画像のURLを入力してください。</dd>
-    </dl>
-    <dl class="message-properties">
-        <dt class="optional">stickerPackageId
-            <span class="property-type">number</span>
-        </dt>
-        <dd>ステッカーパッケージIdを指定してください。</dd>
-    </dl>
-    <dl class="message-properties">
-        <dt class="optional">stickerId
-            <span class="property-type">number</span>
-        </dt>
-        <dd>ステッカーIdを指定してください。</dd>
+        <dt class="optional">message <span class="property-type">string</span></dt>
+        <dd>メッセージ</dd>
+        <dt class="optional">imageUrl <span class="property-type">string</span></dt>
+        <dd>画像URL</dd>
+        <dt class="optional">stickerPackageId <span class="property-type">number</span></dt>
+        <dd>ステッカーパッケージId</dd>
+        <dt class="optional">stickerId <span class="property-type">number</span></dt>
+        <dd>ステッカーId</dd>
     </dl>
     <h3>詳細</h3>
-    <p>
-        <a href="https://notify-bot.line.me/doc/ja/">LINE Notify API Document</a>を参照ください。</p>
+    <p>メッセージおよび画像URLは、設定した値が空の場合のみmsg変数で上書きすることが可能です。</p>
+    <p>詳しくは、<a href="https://notify-bot.line.me/doc/ja/">LINE Notify API Document</a>を参照ください。</p>
+</script>
 
+<script type="text/x-red" data-help-name="line-notify">
+<p><a href="https://notify-bot.line.me/ja/">LINE Notify</a>で取得したアクセストークンを入力ください。</a></p>
 </script>

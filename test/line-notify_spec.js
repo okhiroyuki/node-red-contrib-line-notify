@@ -49,7 +49,7 @@ describe("Line Notify Node", () => {
     (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message", () => {
         const tests=[
             {title:"send message" , flow: { id: "n1", type: "line-notify", name: "test", message:"message test", creds: "creds", contentType: "message", wires:[["n2"]]}},
-            {title:"send sticker" , flow: { id: "n1", type: "line-notify", name: "test", message:"sticker test", creds: "creds", contentType: "sticker", stickerPackageId: 1, stickerId: 3, wires:[["n2"]]}},
+            {title:"send sticker" , flow: { id: "n1", type: "line-notify", name: "test", message:"sticker test", creds: "creds", contentType: "sticker", sticker: "default", stickerPackageId: 1, stickerId: 3, wires:[["n2"]]}},
             {title:"send image" , flow: { id: "n1", type: "line-notify", name: "test", message:"image test", creds: "creds", contentType: "imageUrl", imageUrl: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", wires:[["n2"]]}}            
         ]
         tests.forEach((test) => {
@@ -152,28 +152,26 @@ describe("Line Notify Node", () => {
     });
 
     (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message using msg.stickerId", () => {
-        it("can't overwrite", (done) => {
+        it("error", (done) => {
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite stickerId", creds: "creds", contentType: "sticker", stickerPackageId: 1, stickerId: 10, wires:[["n2"]]},
+                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite stickerId", creds: "creds", contentType: "sticker", sticker: "default", sticker:"msg", stickerPackageId: 1, stickerId: 10, wires:[["n2"]]},
                 { id: "creds", type: "linetoken"},
                 { id: "n2", type: "helper" }
             ];
             helper.load(node, flow, {creds:{accessToken: line_token}},() => {
-                const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
-                n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
-                });
-                n1.on("call:warn", (msg) => {
-                    should.equal(msg.lastArg,"line-notify.warn.nooverride.stickerId");
+                n1.on("call:error", (msg) => {
+                    should.equal(msg.lastArg,"line-notify.errors.stickerId");
                     done();
                 });
-                n1.receive({stickerId: 100000});
+                n1.receive({
+                    stickerPackageId: 1
+                });
             });    
         });
         it("can overwrite", (done) => {
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"can overwrite stickerId", creds: "creds", contentType: "sticker", stickerPackageId: 1, stickerId: -1, wires:[["n2"]]},
+                { id: "n1", type: "line-notify", name: "test", message:"can overwrite stickerId", creds: "creds", contentType: "sticker", sticker:"msg", stickerPackageId: 1, stickerId: 1, wires:[["n2"]]},
                 { id: "creds", type: "linetoken"},
                 { id: "n2", type: "helper" }
             ];
@@ -184,34 +182,35 @@ describe("Line Notify Node", () => {
                     should.equal(msg.payload.status,200);
                     done();
                 });
-                n1.receive({stickerId: 11});
+                n1.receive({
+                    stickerPackageId: 1,
+                    stickerId: 11
+                });
             });    
         });
     });
 
     (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message using msg.stickerPackageId", () => {
-        it("can't overwrite", (done) => {
+        it("error", (done) => {
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite stickerPackageId", creds: "creds", contentType: "sticker", stickerPackageId: 2, stickerId: 18, wires:[["n2"]]},
+                { id: "n1", type: "line-notify", name: "test", message:"can't overwrite stickerPackageId", creds: "creds", contentType: "sticker", sticker: "msg", stickerPackageId: 2, stickerId: 18, wires:[["n2"]]},
                 { id: "creds", type: "linetoken"},
                 { id: "n2", type: "helper" }
             ];
             helper.load(node, flow, {creds:{accessToken: line_token}},() => {
-                const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
-                n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
-                });
-                n1.on("call:warn", (msg) => {
-                    should.equal(msg.lastArg,"line-notify.warn.nooverride.stickerPackageId");
+                n1.on("call:error", (msg) => {
+                    should.equal(msg.lastArg,"line-notify.errors.stickerPackageId");
                     done();
                 });
-                n1.receive({stickerPackageId: 100000});
+                n1.receive({
+                    stickerId: 180
+                });
             });    
         });
         it("can overwrite", (done) => {
             const flow = [
-                { id: "n1", type: "line-notify", name: "test", message:"can overwrite stickerPackageId", creds: "creds", contentType: "sticker", stickerPackageId: -1, stickerId: -1, wires:[["n2"]]},
+                { id: "n1", type: "line-notify", name: "test", message:"can overwrite stickerPackageId", creds: "creds", contentType: "sticker", sticker: "default", stickerPackageId: 1, stickerId: 1, wires:[["n2"]]},
                 { id: "creds", type: "linetoken"},
                 { id: "n2", type: "helper" }
             ];

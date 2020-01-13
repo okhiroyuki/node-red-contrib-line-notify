@@ -1,24 +1,38 @@
 {
     "line-notify": {
+        "line-notify": "line notify",
         "label": {
-            "message": "ﾒｯｾｰｼ",
-            "accessToken": "ｱｸｾｽﾄｰｸﾝ",
-            "type": "ｺﾝﾃﾝﾂﾀｲﾌﾟ",
+            "message": "メッセージ",
+            "accessToken": "トークン",
+            "type": "タイプ",
             "url": "URL",
+            "sticker": "ステッカー",
             "stickerPackageId": "PackageId",
             "stickerId": "ID",
             "silent": "通知なし"
         },
         "type":{
-            "message": "メッセージ",
-            "imageUrl": "画像URL",
-            "sticker": "ステッカー"
+            "message": "メッセージのみ",
+            "imageUrl": "メッセージ + 画像",
+            "sticker": "メッセージ + ステッカー"
+        },
+        "sticker":{
+            "default": "設定画面で定義",
+            "msg": "msg変数で定義"
+        },
+        "warn": {
+            "nooverride":{
+                "message": "警告： メッセージは設定値が空の場合のみ上書き可能です。",
+                "imageUrl": "警告： 画像URLは設定値が空の場合のみ上書き可能です。"
+            }
         },
         "errors": {
+            "stikerId": "パラメーターエラー： msg.stikerId",
+            "stickerPackageId": "パラメーターエラー： msg.stickerPackageId"
         }
     },
     "linetoken":{
-        "linetoken": "Line Token",
+        "linetoken": "line token",
         "label": {
             "accessToken": "ｱｸｾｽﾄｰｸﾝ"
         }

@@ -1,5 +1,6 @@
 {
     "line-notify": {
+        "line-notify": "line notify",
         "label": {
             "name": "Name",
             "accessToken": "Token",
@@ -11,21 +12,27 @@
             "silent": "Silent"
         },
         "type":{
-            "message": "Message",
-            "imageUrl": "ImageURL",
-            "sticker": "Sticker"
+            "message": "Only Message",
+            "imageUrl": "With Image",
+            "sticker": "With Sticker"
+        },
+        "sticker":{
+            "default": "Defined on this",
+            "msg": "Defined by msg variable"
         },
         "warn": {
             "nooverride":{
                 "message": "Warning: message properties can not override.",
-                "imageUrl": "Warning: imageUrl properties can not override.",
-                "stikerId": "Warning: stikerId properties can not override.",
-                "stickerPackageId": "Warning: stickerPackageId properties can not override."
+                "imageUrl": "Warning: imageUrl properties can not override."
             }
+        },
+        "errors": {
+            "stikerId": "Parameter error: msg.stikerId",
+            "stickerPackageId": "Parameter error: msg.stickerPackageId"
         }
     },
     "linetoken":{
-        "linentoken": "Line Token",
+        "linentoken": "line token",
         "label": {
             "accessToken": "Token"
         }
