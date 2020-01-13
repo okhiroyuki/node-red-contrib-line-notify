@@ -6,10 +6,13 @@
             "accessToken": "Token",
             "message": "Message",
             "type": "ContentType",
-            "url": "URL",
             "tickerPackageId": "PackageId",
             "tickerId": "Id",
-            "silent": "Silent"
+            "silent": "Silent",
+            "image":{
+                "thumbnail": "Thumbnail",
+                "fullSize": "FullSize"
+            }
         },
         "type":{
             "message": "Only Message",
@@ -23,12 +26,14 @@
         "warn": {
             "nooverride":{
                 "message": "Warning: message properties can not override.",
-                "imageUrl": "Warning: imageUrl properties can not override."
+                "imageUrl": "Warning: imageUrl properties can not override.",
+                "thumbnailUrl": "Warning: thumbnailUrl properties can not override."
             }
         },
         "errors": {
             "stikerId": "Parameter error: msg.stikerId",
-            "stickerPackageId": "Parameter error: msg.stickerPackageId"
+            "stickerPackageId": "Parameter error: msg.stickerPackageId",
+            "imageUrl": "must set imageUrl"
         }
     },
     "linetoken":{

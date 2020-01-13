@@ -22,8 +22,12 @@
         <input type="hidden" id="node-input-message">
     </div>
     <div class="form-row line-type-imageUrl" hidden>
-        <label for="node-input-url"> <i class="fa fa-globe fa-fw"></i> <span data-i18n="line-notify.label.url"></label>
+        <label for="node-input-imageUrl"> <i class="fa fa-globe fa-fw"></i> <span data-i18n="line-notify.label.image.fullSize"></label>
         <input type="text" id="node-input-imageUrl">
+    </div>
+    <div class="form-row line-type-imageUrl" hidden>
+        <label for="node-input-imageThumbnail"> <i class="fa fa-globe fa-fw"></i> <span data-i18n="line-notify.label.image.thumbnail"></label>
+        <input type="text" id="node-input-imageThumbnail">
     </div>
     <div class="form-row line-type-sticker" hidden>
         <label for="node-input-sticker"><i class="fa fa-list fa-fw"></i> <span data-i18n="line-notify.label.sticker"></span></label>
@@ -71,6 +75,9 @@
             },
             contentType:{
                 value: "message"
+            },
+            imageThumbnail:{
+                value: ""
             },
             imageUrl:{
                 value:""
