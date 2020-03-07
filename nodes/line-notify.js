@@ -55,17 +55,16 @@ module.exports = function(RED) {
                 sendError(node, "toeken is empty");
                 return;
             }
+            let datajson = {
+                message: node.message
+            };
             if(validateString(msg.message)){
-                if(!node.message){
-                    node.message = msg.message;
+                if(!datajson.message){
+                    datajson.message = msg.message;
                 }else{
                     node.warn(RED._("line-notify.warn.nooverride.message"));
                 }    
             }
-
-            let datajson = {
-                message: node.message
-            };
             if(node.silent){
                 datajson.notificationDisabled = true;
             }
