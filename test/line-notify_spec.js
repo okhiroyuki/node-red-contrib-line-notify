@@ -40,9 +40,28 @@ describe("Line Notify Node", () => {
         helper.load(node, flow, {creds:{accessToken: "dummy"}}, () => {
             const n1 = helper.getNode("n1");
             n1.on("call:error", (err) => {
+                should.equal(err.lastArg,"token is empty");
                 done();
             });
             n1.receive({});
+        });
+    });
+
+    it("error token", (done) => {
+        const flow = [
+            { id: "n1", type: "line-notify", name: "test", message:"message test", creds: "creds", contentType: "message", wires:[["n2"]]},
+            { id: "creds", type: "linetoken"},
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(node, flow, {creds:{accessToken: "hoge"}},() => {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n1.on("call:error", (err) => {
+                should.equal(err.lastArg.status,401);
+                should.equal(err.lastArg.payload, "Invalid access token");        
+                done();
+            });
+            n1.receive({payload: "test"});
         });
     });
 
@@ -63,7 +82,8 @@ describe("Line Notify Node", () => {
                     const n2 = helper.getNode("n2");
                     const n1 = helper.getNode("n1");
                     n2.on("input", (msg) => {
-                        should.equal(msg.payload.status,200);
+                        should.equal(msg.status,200);
+                        should.equal(msg.payload, "test");
                         done();
                     });
                     n1.on("call:error", (err) => {
@@ -86,7 +106,8 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
+                    should.equal(msg.payload, "can overwrite");
                 });
                 n1.on("call:warn", (msg) => {
                     should.equal(msg.lastArg,"line-notify.warn.nooverride.message");
@@ -105,7 +126,7 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
                     done();
                 });
                 n1.receive({payload: "can overwrite"});
@@ -124,7 +145,7 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
                 });
                 n1.on("call:warn", (msg) => {
                     should.equal(msg.lastArg,"line-notify.warn.nooverride.imageUrl");
@@ -158,7 +179,7 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
                     done();
                 });
                 n1.receive({imageUrl: "https://dummyimage.com/640x640"});
@@ -177,7 +198,7 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
                 });
                 n1.on("call:warn", (msg) => {
                     should.equal(msg.lastArg,"line-notify.warn.nooverride.imageThumbnail");
@@ -196,7 +217,7 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
                     done();
                 });
                 n1.receive({imageThumbnail: "https://dummyimage.com/64x64"});
@@ -232,7 +253,7 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
                     done();
                 });
                 n1.receive({
@@ -271,7 +292,7 @@ describe("Line Notify Node", () => {
                 const n2 = helper.getNode("n2");
                 const n1 = helper.getNode("n1");
                 n2.on("input", (msg) => {
-                    should.equal(msg.payload.status,200);
+                    should.equal(msg.status,200);
                     done();
                 });
                 n1.receive({
