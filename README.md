@@ -2,6 +2,18 @@
 
 An easy-to-use NodeRED node for sending Line Notify.
 
+## Note
+
+The handling method of the message using the msg variable differs depending on the version.
+
+### 3.0.0 or higher
+
+Handle messages with msg.payload.
+
+### 2.1.0 or lower
+
+Handle messages with msg.message.
+
 ## Install
 
 Run the following command in your Node-RED user directory - typically ~/.node-red
