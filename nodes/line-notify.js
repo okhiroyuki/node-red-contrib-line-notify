@@ -52,7 +52,9 @@ module.exports = function(RED) {
 
         node.on('input', function(msg) {
             if(!node.accessToken){
-                sendError(node, "token is empty");
+                msg.payload = "token is empty";
+                msg.status = -1;
+                sendError(node, msg);
                 return;
             }
             let datajson = {

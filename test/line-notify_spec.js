@@ -40,7 +40,8 @@ describe("Line Notify Node", () => {
         helper.load(node, flow, {creds:{accessToken: "dummy"}}, () => {
             const n1 = helper.getNode("n1");
             n1.on("call:error", (err) => {
-                should.equal(err.lastArg,"token is empty");
+                should.equal(err.lastArg.payload,"token is empty");
+                should.equal(err.lastArg.status,-1);
                 done();
             });
             n1.receive({});
