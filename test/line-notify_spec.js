@@ -75,7 +75,7 @@ describe("Line Notify Node", () => {
         })
     });
 
-    (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message using msg.message", () => {
+    (process.env.GITHUB_ACTIONS ? describe.skip : describe)("should send returned message using msg.payload", () => {
         it("can't overwrite", (done) => {
             const flow = [
                 { id: "n1", type: "line-notify", name: "test", message:"can't overwrite", creds: "creds", silent: true, contentType: "message", wires:[["n2"]]},
@@ -92,7 +92,7 @@ describe("Line Notify Node", () => {
                     should.equal(msg.lastArg,"line-notify.warn.nooverride.message");
                     done();
                 });
-                n1.receive({message: "can overwrite"});
+                n1.receive({payload: "can overwrite"});
             });    
         });
         it("can overwrite", (done) => {
@@ -108,7 +108,7 @@ describe("Line Notify Node", () => {
                     should.equal(msg.payload.status,200);
                     done();
                 });
-                n1.receive({message: "can overwrite"});
+                n1.receive({payload: "can overwrite"});
             });  
         });
     });

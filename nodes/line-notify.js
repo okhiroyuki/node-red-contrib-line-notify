@@ -58,9 +58,9 @@ module.exports = function(RED) {
             let datajson = {
                 message: node.message
             };
-            if(validateString(msg.message)){
+            if(validateString(msg.payload)){
                 if(!datajson.message){
-                    datajson.message = msg.message;
+                    datajson.message = msg.payload;
                 }else{
                     node.warn(RED._("line-notify.warn.nooverride.message"));
                 }    
