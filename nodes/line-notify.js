@@ -52,7 +52,9 @@ module.exports = function(RED) {
 
         node.on('input', function(msg) {
             if(!node.accessToken){
-                sendError(node, "toeken is empty");
+                msg.payload = "token is empty";
+                msg.status = -1;
+                sendError(node, msg);
                 return;
             }
             let datajson = {
@@ -130,19 +132,21 @@ module.exports = function(RED) {
             };
 
             axios.request(lineconfig).then((res) => {
-                msg.payload = res.data;
+                msg.status = res.data.status;
                 node.send(msg);
                 node.status({fill: "blue", shape: "dot", text: "success"});
             })
             .catch((error) => {
-                sendError(node, error.message);
+                msg.status = error.response.data.status;
+                msg.payload = error.response.data.message;
+                sendError(node, msg);
             });
         });
     }
 
-    function sendError(node, message){
-        node.error(message);
-        node.status({ fill: "red", shape: "ring", text: message});
+    function sendError(node, msg){
+        node.error(msg);
+        node.status({ fill: "red", shape: "ring", text: msg.payload});
     }
 
     function linetoken(n){

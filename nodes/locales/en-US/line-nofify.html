@@ -1,6 +1,6 @@
 <script type="text/x-red" data-help-name="line-notify">
     <p>You can send notifications to LINE at this node.</p>
-    <h3>入力</h3>
+    <h3>Input</h3>
     <dl class="message-properties">
         <dt class="optional">payload <span class="property-type">string</span></dt>
         <dd>message</dd>
@@ -13,10 +13,16 @@
         <dt class="optional">stickerId <span class="property-type">number</span></dt>
         <dd>stikckerId</dd>
     </dl>
+    <h3>Output</h3>
+    <dl class="message-properties">
+        <dt>status <span class="property-type">number</span></dt>
+        <dd>status code</dd>
+    </dl>
     <h3>Detials</h3>
     <p>Message and image URL can be overwritten with msg variable only when the set value is empty.</p>
     <p>If no thumbnail is specified, it will be overwritten with the full size image URL.</p>
     <p>For further details of see <a href="https://notify-bot.line.me/doc/en/">LINE Notify API Document</a>.</p>
+    <p>If an error occurs, an error message is output to msg.payload.</p>
 </script>
 
 <script type="text/x-red" data-help-name="line-notify">
