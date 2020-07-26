@@ -24,20 +24,20 @@
             "msg": "Defined by msg variable"
         },
         "warn": {
-            "nooverride":{
+            "noOverride":{
                 "message": "Warning: message properties can not override.",
                 "imageUrl": "Warning: imageUrl properties can not override.",
                 "thumbnailUrl": "Warning: thumbnailUrl properties can not override."
             }
         },
         "errors": {
-            "stikerId": "Parameter error: msg.stikerId",
+            "stickerId": "Parameter error: msg.stickerId",
             "stickerPackageId": "Parameter error: msg.stickerPackageId",
             "imageUrl": "must set imageUrl"
         }
     },
     "linetoken":{
-        "linentoken": "line token",
+        "linetoken": "line token",
         "label": {
             "accessToken": "Token"
         }

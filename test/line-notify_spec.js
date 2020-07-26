@@ -111,7 +111,7 @@ describe("Line Notify Node", () => {
                     should.equal(msg.payload, "can overwrite");
                 });
                 n1.on("call:warn", (msg) => {
-                    should.equal(msg.lastArg,"line-notify.warn.nooverride.message");
+                    should.equal(msg.lastArg,"line-notify.warn.noOverride.message");
                     done();
                 });
                 n1.receive({payload: "can overwrite"});
@@ -149,7 +149,7 @@ describe("Line Notify Node", () => {
                     should.equal(msg.status,200);
                 });
                 n1.on("call:warn", (msg) => {
-                    should.equal(msg.lastArg,"line-notify.warn.nooverride.imageUrl");
+                    should.equal(msg.lastArg,"line-notify.warn.noOverride.imageUrl");
                     done();
                 });
                 n1.receive({imageUrl: "dummy"});
@@ -202,7 +202,7 @@ describe("Line Notify Node", () => {
                     should.equal(msg.status,200);
                 });
                 n1.on("call:warn", (msg) => {
-                    should.equal(msg.lastArg,"line-notify.warn.nooverride.imageThumbnail");
+                    should.equal(msg.lastArg,"line-notify.warn.noOverride.imageThumbnail");
                     done();
                 });
                 n1.receive({imageThumbnail: "dummy"});

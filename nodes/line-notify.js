@@ -57,70 +57,70 @@ module.exports = function(RED) {
                 sendError(node, msg);
                 return;
             }
-            let datajson = {
+            let dataJson = {
                 message: node.message
             };
             if(validateString(msg.payload)){
-                if(!datajson.message){
-                    datajson.message = msg.payload;
+                if(!dataJson.message){
+                    dataJson.message = msg.payload;
                 }else{
-                    node.warn(RED._("line-notify.warn.nooverride.message"));
+                    node.warn(RED._("line-notify.warn.noOverride.message"));
                 }    
             }
             if(node.silent){
-                datajson.notificationDisabled = true;
+                dataJson.notificationDisabled = true;
             }
             if(isImageUrl(node)){
                 if(validateString(msg.imageThumbnail)){
                     if(node.imageThumbnail){
-                        datajson.imageThumbnail = node.imageThumbnail;
-                        node.warn(RED._("line-notify.warn.nooverride.imageThumbnail"));
+                        dataJson.imageThumbnail = node.imageThumbnail;
+                        node.warn(RED._("line-notify.warn.noOverride.imageThumbnail"));
                     }else{
-                        datajson.imageThumbnail = msg.imageThumbnail;
+                        dataJson.imageThumbnail = msg.imageThumbnail;
                     }
                 }else{
-                    datajson.imageThumbnail = node.imageThumbnail;
+                    dataJson.imageThumbnail = node.imageThumbnail;
                 }
                 if(validateString(msg.imageUrl)){
                     if(node.imageUrl){
-                        datajson.imageFullsize = node.imageUrl;   
-                        node.warn(RED._("line-notify.warn.nooverride.imageUrl"));
+                        dataJson.imageFullsize = node.imageUrl;   
+                        node.warn(RED._("line-notify.warn.noOverride.imageUrl"));
                     }else{
-                        datajson.imageFullsize = msg.imageUrl;    
+                        dataJson.imageFullsize = msg.imageUrl;    
                     }
                 }else{
-                    datajson.imageFullsize = node.imageUrl;   
+                    dataJson.imageFullsize = node.imageUrl;   
                 }
-                if(!datajson.imageFullsize){
+                if(!dataJson.imageFullsize){
                     sendError(node, RED._("line-notify.errors.imageUrl"));
                 }
-                if(!datajson.imageThumbnail){
-                    datajson.imageThumbnail = datajson.imageFullsize;
+                if(!dataJson.imageThumbnail){
+                    dataJson.imageThumbnail = dataJson.imageFullsize;
                 }
             }
             if(isSticker(node)){
                 if(canOverwriteSticker(node)){
                     if(validateNumber(msg.stickerPackageId)){
-                        datajson.stickerPackageId = msg.stickerPackageId;
+                        dataJson.stickerPackageId = msg.stickerPackageId;
                     }else{
-                        datajson.stickerPackageId = node.stickerPackageId;
+                        dataJson.stickerPackageId = node.stickerPackageId;
                         sendError(node, RED._("line-notify.errors.stickerPackageId"));
                         return;
                     }
                     if(validateNumber(msg.stickerId)){
-                        datajson.stickerId = msg.stickerId;
+                        dataJson.stickerId = msg.stickerId;
                     }else{
-                        datajson.stickerId = node.stickerId;
+                        dataJson.stickerId = node.stickerId;
                         sendError(node, RED._("line-notify.errors.stickerId"));
                         return;
                     }
                 }else{
-                    datajson.stickerPackageId = node.stickerPackageId;
-                    datajson.stickerId = node.stickerId;
+                    dataJson.stickerPackageId = node.stickerPackageId;
+                    dataJson.stickerId = node.stickerId;
                 }
             }
 
-            let lineconfig = {
+            let lineConfig = {
                 baseURL: BASE_URL,
                 url: PATH,
                 method: 'post',
@@ -128,10 +128,10 @@ module.exports = function(RED) {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': 'Bearer ' + node.accessToken
                 },
-                data: qs.stringify(trimDataJson(datajson))
+                data: qs.stringify(trimDataJson(dataJson))
             };
 
-            axios.request(lineconfig).then((res) => {
+            axios.request(lineConfig).then((res) => {
                 msg.status = res.data.status;
                 node.send(msg);
                 node.status({fill: "blue", shape: "dot", text: "success"});
@@ -149,7 +149,7 @@ module.exports = function(RED) {
         node.status({ fill: "red", shape: "ring", text: msg.payload});
     }
 
-    function linetoken(n){
+    function lineToken(n){
         RED.nodes.createNode(this, n);
         this.accessToken = n.accessToken;
     }
@@ -160,7 +160,7 @@ module.exports = function(RED) {
         }
     });
 
-    RED.nodes.registerType("linetoken", linetoken,{
+    RED.nodes.registerType("linetoken", lineToken,{
         credentials: {
           accessToken: {type:"text"}
         }

@@ -24,14 +24,14 @@
             "msg": "msg変数で定義"
         },
         "warn": {
-            "nooverride":{
+            "noOverride":{
                 "message": "警告： msg.messageは設定値が空の場合のみ上書き可能です。",
                 "imageUrl": "警告： msg.imageUrlは設定値が空の場合のみ上書き可能です。",
                 "thumbnailUrl": "警告： msg.thumbnailUrlは設定値が空の場合のみ上書き可能です。"
             }
         },
         "errors": {
-            "stikerId": "パラメーターエラー： msg.stikerId",
+            "stickerId": "パラメーターエラー： msg.stickerId",
             "stickerPackageId": "パラメーターエラー： msg.stickerPackageId",
             "imageUrl": "imageUrlは必ずセットしてください"
         }
