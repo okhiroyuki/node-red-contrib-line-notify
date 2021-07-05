@@ -39,7 +39,7 @@
     "grunt-nr-locales-htmllint": "^1.1.0",
     "grunt-simple-mocha": "^0.4.1",
     "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^8.3.0",
+    "mocha": "^9.0.2",
     "node-red": "^1.2.9",
     "node-red-node-test-helper": "^0.2.7",
     "should": "^13.2.3"
