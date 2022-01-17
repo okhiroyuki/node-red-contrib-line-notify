@@ -30,7 +30,7 @@
     "querystring": "^0.2.1"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0",
+    "dotenv": "^14.1.0",
     "grunt": "^1.4.0",
     "grunt-contrib-jshint": "^3.0.0",
     "grunt-jsonlint": "^2.1.3",
